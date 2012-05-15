@@ -1,9 +1,17 @@
 package github;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.scribe.builder.ServiceBuilder;
 import github.api.GitHubApi;
+import github.entity.Gist;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
@@ -11,6 +19,8 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
+
+import java.lang.reflect.Type;
 
 /**
  * Hello world!
@@ -41,9 +51,7 @@ public class GitHubExample
 		    System.out.println(authorizationUrl);
 		    System.out.println("And paste the authorization code here");
 		    System.out.print(">>");	
-		    String nextLine = "";
-		    //String code = getCode(authorizationUrl);
-		    
+		    String nextLine = "";	
 		    
 		    nextLine = in.nextLine();		  		   
 		    Verifier verifier = new Verifier(nextLine);
@@ -56,6 +64,10 @@ public class GitHubExample
 		    System.out.println("(if your curious it looks like this: " + accessToken + " )");
 		    System.out.println();
 		    
+		    OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.github.com/users/yosaku01/gists");
+		    service.signRequest(accessToken, request); // the access token from step 4		    
+		    Response response = request.send();
+		    int size = getGistFromResponse(response.getBody());		     
 		    System.out.println();
 		    System.out.println("Thats it man! Go and build something awesome with Scribe! :)");
 		}
@@ -72,7 +84,24 @@ public class GitHubExample
 		OAuthRequest request = new OAuthRequest(Verb.GET, authorizationUrl);
 		 
 		Response response = request.send();
-		String body = response.getBody();
+		
 		return code;
 	}*/
+    
+    
+    private static int getGistFromResponse(String response)
+    {
+    	Gson gson = new Gson();
+    	try
+    	{
+    		Type listType = new TypeToken<LinkedList<Gist>>(){}.getType();
+        	LinkedList<Gist> gists = gson.fromJson(response, listType);
+        	return gists.size();
+    	}
+    	catch(JsonParseException ex)
+    	{
+    		ex.printStackTrace();
+    		return -1;
+    	}
+    }
 }
