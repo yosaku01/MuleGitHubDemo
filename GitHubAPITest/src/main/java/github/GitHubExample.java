@@ -1,13 +1,12 @@
 package github;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 import org.scribe.builder.ServiceBuilder;
 import github.api.GitHubApi;
 import github.entity.Gist;
+import github.entity.Repository;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -64,11 +63,11 @@ public class GitHubExample
 		    System.out.println("(if your curious it looks like this: " + accessToken + " )");
 		    System.out.println();
 		    
-		    OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.github.com/users/yosaku01/gists");
+		    OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.github.com/repos/yosaku01/MuleGitHubDemo/forks");
 		    service.signRequest(accessToken, request); // the access token from step 4		    
 		    Response response = request.send();
-		    int size = getGistFromResponse(response.getBody());		     
-		    System.out.println();
+		    int size = getForkFromResponse(response.getBody());		     
+		    System.out.println(size);
 		    System.out.println("Thats it man! Go and build something awesome with Scribe! :)");
 		}
 		catch(Exception ex)
@@ -89,13 +88,13 @@ public class GitHubExample
 	}*/
     
     
-    private static int getGistFromResponse(String response)
+    private static int getForkFromResponse(String response)
     {
     	Gson gson = new Gson();
     	try
     	{
-    		Type listType = new TypeToken<LinkedList<Gist>>(){}.getType();
-        	LinkedList<Gist> gists = gson.fromJson(response, listType);
+    		Type listType = new TypeToken<LinkedList<Repository>>(){}.getType();
+        	LinkedList<Repository> gists = gson.fromJson(response, listType);
         	return gists.size();
     	}
     	catch(JsonParseException ex)
