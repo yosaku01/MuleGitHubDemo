@@ -2,15 +2,12 @@ package github.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import github.utils.DateUtils;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 
-public class Gist 
+public class Gist implements Serializable
 {
 	/** serialVersionUID */
 	private static final long serialVersionUID = -2221817463228217456L;
@@ -92,8 +89,6 @@ public class Gist
 		this.isPublic = isPublic;
 		return this;
 	}
-
-	
 
 	/**
 	 * @return comments
