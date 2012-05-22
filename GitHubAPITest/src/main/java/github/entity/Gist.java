@@ -1,11 +1,10 @@
 package github.entity;
 
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Map;
-
 
 public class Gist implements Serializable
 {
@@ -90,6 +89,8 @@ public class Gist implements Serializable
 		return this;
 	}
 
+	
+
 	/**
 	 * @return comments
 	 */
@@ -138,9 +139,6 @@ public class Gist implements Serializable
 		return this;
 	}
 
-	
-
-	
 	/**
 	 * @return htmlUrl
 	 */
@@ -200,7 +198,8 @@ public class Gist implements Serializable
 	 * @param user
 	 * @return this gist
 	 */
-	public Gist setUser(User user) {
+	public Gist setUser(User user) 
+	{
 		this.user = user;
 		return this;
 	}

@@ -1,10 +1,12 @@
 package github;
 
+import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import org.scribe.builder.ServiceBuilder;
 import github.api.GitHubApi;
-import github.entity.User;
+import github.entity.RepositoryCommit;
 import github.utils.GsonNewUtil;
 
 import org.scribe.model.OAuthRequest;
@@ -13,6 +15,8 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
+
+import com.google.gson.reflect.TypeToken;
 
 
 /**
@@ -32,7 +36,7 @@ public class GitHubExample
 		    OAuthService service = new ServiceBuilder().provider(GitHubApi.class)
 		        .apiKey(apiKey)
 		        .apiSecret(apiSecret)
-		        .callback("http://www.sot-soft.com")
+		        .callback("http://localhost:8082")
 		        .build();
 		    Scanner in = new Scanner(System.in);
 		    
@@ -57,16 +61,15 @@ public class GitHubExample
 		    System.out.println("(if your curious it looks like this: " + accessToken + " )");
 		    System.out.println();
 		    
-		    OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.github.com/user");
-		    service.signRequest(accessToken, request); // the access token from step 4		    
-		    Response response = request.send();
-		    GsonNewUtil<User> util = new GsonNewUtil<User>();
+		    OAuthRequest request1 = new OAuthRequest(Verb.GET, "https://api.github.com/repos/yosaku01/MuleGitHubDemo/commits");
+		    service.signRequest(accessToken, request1); // the access token from step 4		    
+		    Response response1  = request1.send();
+		    GsonNewUtil<RepositoryCommit> util1 = new GsonNewUtil<RepositoryCommit>();
+		    Type listType = new TypeToken<LinkedList<RepositoryCommit>>(){}.getType();
+		    LinkedList<RepositoryCommit> gistList = util1.getObjListFromResponse(response1.getBody(), listType);
 		    
-		    User user = util.getObjectFromResponse(response.getBody(), User.class);	
-		    if(user != null)
-		    {
-		    	System.out.println(user.getLogin());
-		    }		    
+		    System.out.println("gist list count is:" + gistList.size());
+		       
 		    System.out.println("Thats it man! Go and build something awesome with Scribe! :)");
 		}
 		catch(Exception ex)
